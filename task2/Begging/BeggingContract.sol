@@ -117,6 +117,15 @@ contract BeggingContract {
         if (amount <= amounts3[2]) {
             return;
         }
+        // 检查是否已存在前3
+        for (uint256 i = 0; i < 3; i++) {
+            if (addrs3[i] == addr) {
+                amounts3[i] = amount;
+                // 重新排序
+                bubbleSort();
+                return ;
+            }
+        }
         for(uint256 i=0; i<amounts3.length; i++){
             if(amount>amounts3[i]){
                 for(uint256 j=amounts3.length-1; j > i; j--){
@@ -129,6 +138,20 @@ contract BeggingContract {
             }
         }
     }
+    // 冒泡排序
+    function bubbleSort() public {
+        uint256 n = amounts3.length;
+        for (uint256 i = 0; i < n - 1; i++) {
+            for (uint256 j = 0; j < n - i - 1; j++) {
+                if (amounts3[j] < amounts3[j + 1]) {
+                    // 交换
+                    (amounts3[j], amounts3[j + 1]) = (amounts3[j + 1], amounts3[j]);
+                    (addrs3[j], addrs3[j + 1]) = (addrs3[j + 1], addrs3[j]);
+                }
+            }
+        }
+    }
+
     // 查询金额前三的地址和金额；
     function getDonationTop3() external view returns (address[3] memory,uint256[3] memory) {
         return (addrs3, amounts3);
